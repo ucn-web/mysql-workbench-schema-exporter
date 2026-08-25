@@ -1,5 +1,6 @@
 {
-	"name" : "mysql-workbench-schema-exporter/mysql-workbench-schema-exporter",
+	"name" : "ucn-web/mysql-workbench-schema-exporter",
+  "version": "23.1.0",
 	"type" : "library",
 	"description" : "MySQL Workbench Schema Exporter",
 	"keywords" : [
