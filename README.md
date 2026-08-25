@@ -1,7 +1,11 @@
+![Build Status](https://github.com/mysql-workbench-schema-exporter/mysql-workbench-schema-exporter/actions/workflows/continuous-integration.yml/badge.svg)
+[![Latest Stable Version](https://poser.pugx.org/mysql-workbench-schema-exporter/mysql-workbench-schema-exporter/v/stable.svg)](https://packagist.org/packages/mysql-workbench-schema-exporter/mysql-workbench-schema-exporter)
+[![Total Downloads](https://poser.pugx.org/mysql-workbench-schema-exporter/mysql-workbench-schema-exporter/downloads.svg)](https://packagist.org/packages/mysql-workbench-schema-exporter/mysql-workbench-schema-exporter) 
+[![License](https://poser.pugx.org/mysql-workbench-schema-exporter/mysql-workbench-schema-exporter/license.svg)](https://packagist.org/packages/mysql-workbench-schema-exporter/mysql-workbench-schema-exporter)
+
 # README
 
-What is MySQL Workbench Schema Exporter?
-----------------------------------------
+## What is MySQL Workbench Schema Exporter?
 
 [MySQL Workbench](http://www.mysql.com/products/workbench/) Schema Exporter is a library to
 transform the MySQL Workbench model (`*.mwb`) to useful another schemas.
@@ -18,67 +22,33 @@ Currently, MySQL Workbench Schema Exporter can export the model to various schem
     [Annotation Classes](http://docs.doctrine-project.org/projects/doctrine-orm/en/latest/reference/annotations-reference.html)
     or Annotation Classes with [Zend Framework 2](http://framework.zend.com/)
     [Input Filter support](http://framework.zend.com/manual/2.1/en/modules/zend.input-filter.intro.html).
-  * [Zend DbTable](http://framework.zend.com/manual/1.12/en/zend.db.table.html).
-  * Zend Rest Controller.
-  * Sencha ExtJS3 Model.
-  * Sencha [ExtJS4 Model](http://www.sencha.com/products/extjs/).
+  * [Sequelize](https://sequelize.org).
   * Propel [XML Schema](http://www.propelorm.org/reference/schema) and YAML Schema.
-  * [Node Sequelize](http://sequelizejs.com/).
+  * Sencha ExtJS3 Model and Sencha [ExtJS4 Model](http://www.sencha.com/products/extjs/).
+  * [Zend DbTable](http://framework.zend.com/manual/1.12/en/zend.db.table.html) and Zend Rest Controller.
 
 The actual conversion to another schema is done using an exporter. These plugins are available in subprojects:
  * [Doctrine1 Exporter](https://github.com/mysql-workbench-schema-exporter/doctrine1-exporter)
  * [Doctrine2 Exporter](https://github.com/mysql-workbench-schema-exporter/doctrine2-exporter)
  * [Propel1 Exporter](https://github.com/mysql-workbench-schema-exporter/propel1-exporter)
+ * [Sencha ExtJS Exporter](https://github.com/mysql-workbench-schema-exporter/sencha-exporter)
+ * [Sequelize Exporter](https://github.com/mysql-workbench-schema-exporter/sequelize-exporter)
  * [Zend Framework 1 Exporter](https://github.com/mysql-workbench-schema-exporter/zend1-exporter)
- * [Node Exporter](https://github.com/mysql-workbench-schema-exporter/node-exporter)
-
+ 
 ## Prerequisites
 
-  * PHP 5.4+
+  * PHP 7.4+
   * Composer to install the dependencies
 
 ## Installation
 
-### Using Composer
-
   1. In your project directory issue:
 
-    ```
-    php composer.phar require --dev mysql-workbench-schema-exporter/mysql-workbench-schema-exporter
-    ```
+    composer require --dev mysql-workbench-schema-exporter/mysql-workbench-schema-exporter
 
   2. You then can invoke the CLI script using `vendor/bin/mysql-workbench-schema-export`.
 
   3. You can directly require an exporter for your project:
-  ```
-  php composer.phar require --dev mysql-workbench-schema-exporter/doctrine2-exporter
-  ```
-
-
-### Stand alone
-
-  1. Get the source code using Git or
-  [download](https://github.com/johmue/mysql-workbench-schema-exporter/releases) from Github.
-  2. Get [composer](https://getcomposer.org/).
-  3. Install dependencies:
-
-    ```
-    php composer.phar install
-    ```
-
-  4. You then can invoke the CLI script using `bin/mysql-workbench-schema-export`.
-
-## Configuring MySQL Workbench Schema Exporter
-
-MySQL Workbench Schema Exporter can be configured at runtime using methods:
-
-  * Setup options.
-  * Model comment, either applied to table, column, or foreign key object.
-
-Both methods accept different options, and generally divided as common options and exporter
-(formatter) specific options.
-
-### Common Setup Options
 
 General options applied to all formatter.
 
@@ -156,6 +126,13 @@ General options applied to all formatter.
 
     Default is `empty`.
 
+  * `stripMultipleUnderscores`
+
+    If enabled, consider multiple underscores as single ones so for example, a table named `user__group` 
+    will still produce a `UserGroup` entity.
+
+    Default is `false`.
+
 ### Common Model Comment Behavior
 
   * `{MwbExporter:external}true{/MwbExporter:external}` (applied to Table, View)
@@ -178,17 +155,18 @@ General options applied to all formatter.
 - [NodeJS Sequelize ](https://github.com/mysql-workbench-schema-exporter/node-exporter#formatter-setup-options)
 - [Sencha ExtJS3 and ExtJS4](https://github.com/mysql-workbench-schema-exporter/sencha-exporter#formatter-setup-options)
 
+    composer require --dev mysql-workbench-schema-exporter/doctrine2-exporter
 
 ## Command Line Interface (CLI)
 
 The `mysql-workbench-schema-export` command helps export a workbench schema model directly
 from command line. It has feature to customize export configuration before exporting.
 By default, it will use config file `export.json` located in the current directory to supply
-the parameter if it find it. To disable this behaviour, see the option below.
+the parameter if it find it.
 
 Command usage:
 
-    php bin/mysql-workbench-schema-export [options] FILE [DEST]
+    vendor/bin/mysql-workbench-schema-export [options] FILE [DEST]
 
 Where:
 
@@ -212,7 +190,7 @@ Options:
 
   Read export parameters from file (in JSON format).
 
-  * `--saveconfig`
+  * `--save-config`
 
   Save export parameters to file `export.json`, later can be used as value for `--config=file`.
 
@@ -234,29 +212,37 @@ Options:
 
 Sample usage:
 
-    php bin/mysql-workbench-schema-export --export=doctrine1-yaml example/data/test.mwb ./generated
-    php bin/mysql-workbench-schema-export --zip example/data/test.mwb
+    vendor/bin/mysql-workbench-schema-export --export=doctrine1-yaml example/data/test.mwb ./generated
+    vendor/bin/mysql-workbench-schema-export --zip example/data/test.mwb
 
-Sample export parameters (JSON) for doctrine2-annotation:
+## Configuring MySQL Workbench Schema Exporter
 
-    {
-        "export": "doctrine2-annotation",
-        "zip": false,
-        "dir": "temp",
-        "params": {
-            "backupExistingFile": true,
-            "skipPluralNameChecking": false,
-            "enhanceManyToManyDetection": true,
-            "bundleNamespace": "",
-            "entityNamespace": "",
-            "repositoryNamespace": "",
-            "useAnnotationPrefix": "ORM\\",
-            "useAutomaticRepository": true,
-            "indentation": 4,
-            "filename": "%entity%.%extension%",
-            "quoteIdentifier": false
-        }
-    }
+MySQL Workbench Schema Exporter can be configured at runtime using methods:
+
+  * Configuration files.
+  * Model comment, either applied to table, column, or foreign key object.
+
+Refers to exporter project to show detailed information.
+
+ * [Doctrine1 Exporter](https://github.com/mysql-workbench-schema-exporter/doctrine1-exporter#readme)
+ * [Doctrine2 Exporter](https://github.com/mysql-workbench-schema-exporter/doctrine2-exporter#readme)
+ * [Propel1 Exporter](https://github.com/mysql-workbench-schema-exporter/propel1-exporter#readme)
+ * [Sencha ExtJS Exporter](https://github.com/mysql-workbench-schema-exporter/sencha-exporter#readme)
+ * [Sequelize Exporter](https://github.com/mysql-workbench-schema-exporter/sequelize-exporter#readme)
+ * [Zend Framework 1 Exporter](https://github.com/mysql-workbench-schema-exporter/zend1-exporter#readme)
+
+## Common Model Comment Behavior
+
+  * `{MwbExporter:external}true{/MwbExporter:external}` (applied to Table, View)
+
+    Mark table/view as external to skip table/view code generation. For Doctrine use
+    `{d:external}true{/d:external}` instead.
+
+  * `{MwbExporter:category}mycategory{/MwbExporter:category}` (applied to Table)
+
+    Table category used to groups the table for sorting. This way, generated table
+    output can be sorted as you need such as in Propel YAML schema (obviously useful
+    for exporter which results in single file output).
 
 ## Using MySQL Workbench Schema Exporter as Library
 
@@ -270,6 +256,3 @@ If you want to use MySQL Workbench Schema Exporter as a library for other projec
 ## Links
 
   * [MySQL Workbench](http://wb.mysql.com/)
-  * [Doctrine Project](http://www.doctrine-project.org/)
-  * [Symfony Project](http://www.symfony.com/)
-  * [Sencha - Open source FAQ](http://www.sencha.com/legal/open-source-faq/)
