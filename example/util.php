@@ -4,7 +4,7 @@
  * The MIT License
  *
  * Copyright (c) 2010 Johannes Mueller <circus2(at)web.de>
- * Copyright (c) 2012-2014 Toha <tohenk@yahoo.com>
+ * Copyright (c) 2012-2025 Toha <tohenk@yahoo.com>
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,10 +25,13 @@
  * THE SOFTWARE.
  */
 
+use MwbExporter\Bootstrap;
+use MwbExporter\Configuration\FileLogging as FileLoggingConfiguration;
+
 function autoload()
 {
     try {
-        require_once dirname(__FILE__).'/../lib/autoload.php';
+        require_once dirname(__FILE__).'/../autoload.php';
     } catch (\Exception $e) {
         echo "<h2>Error:</h2>\n";
         echo "<textarea cols=\"100\" rows=\"5\">\n";
@@ -62,19 +65,19 @@ function output($document, $time)
     }
 }
 
-function export($target, $setup = array())
+function export($target, $setup = [])
 {
     try {
         // lets stop the time
-        $start    = microtime(true);
+        $start = microtime(true);
         $filename = __DIR__.'/data/sakila.mwb';
-        $outDir   = __DIR__.'/result';
-        $logFile  = $outDir.'/log.txt';
+        $outDir = __DIR__.'/result';
+        $logFile = $outDir.'/log.txt';
 
-        $bootstrap = new \MwbExporter\Bootstrap();
+        $bootstrap = new Bootstrap();
         $formatter = $bootstrap->getFormatter($target);
-        $formatter->setup(array_merge(array(\MwbExporter\Formatter\Formatter::CFG_LOG_FILE => $logFile), $setup));
-        $document  = $bootstrap->export($formatter, $filename, $outDir, 'zip');
+        $formatter->setup(array_merge([FileLoggingConfiguration::class => $logFile], $setup));
+        $document = $bootstrap->export($formatter, $filename, $outDir, 'zip');
 
         // show the time needed to parse the mwb file
         $end = microtime(true);
