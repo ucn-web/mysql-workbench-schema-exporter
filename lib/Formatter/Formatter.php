@@ -46,7 +46,6 @@ use MwbExporter\Configuration\NamingStrategy as NamingStrategyConfiguration;
 use MwbExporter\Configuration\PluralSkip as PluralSkipConfiguration;
 use MwbExporter\Configuration\Tab as TabConfiguration;
 use MwbExporter\Configuration\TableAndViewSort as TableAndViewSortConfiguration;
-use MwbExporter\Configuration\TableNamePrefix as TableNamePrefixConfiguration;
 use MwbExporter\Configuration\UserDatatype as UserDatatypeConfiguration;
 use MwbExporter\Helper\Comment;
 use MwbExporter\Model\Base;
@@ -116,7 +115,6 @@ abstract class Formatter implements FormatterInterface
             ->add(new UserDatatypeConfiguration())
             ->add(new M2MEnhancedConfiguration())
             ->add(new TableAndViewSortConfiguration())
-            ->add(new TableNamePrefixConfiguration())
             ->add(new M2MSkipConfiguration())
             ->add(new PluralSkipConfiguration())
             ->add(new CategoryConfiguration())
