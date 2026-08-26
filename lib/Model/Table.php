@@ -29,7 +29,6 @@ namespace MwbExporter\Model;
 
 use MwbExporter\Configuration\Category as CategoryConfiguration;
 use MwbExporter\Configuration\M2MSkip as M2MSkipConfiguration;
-use MwbExporter\Configuration\TableNamePrefix;
 use MwbExporter\Writer\WriterInterface;
 
 class Table extends Base
@@ -305,8 +304,7 @@ class Table extends Base
      */
     public function getRawTableName()
     {
-        $prefix = $this->getConfig(TableNamePrefix::class)->getValue();
-        return $prefix . $this->getName();
+        return $this->getName();
     }
 
     /**
